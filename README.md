@@ -16,6 +16,8 @@ Make sure you have installed all of the following prerequisites on your developm
 
 
 ## Please note
-For save all resource (html, css, js, image, etc.) of a web page I had used pywebcopy (https://pypi.org/project/pywebcopy/), but I don't know why, the "original" version hangs the console and does not exit. If I have correctly understood, this issue is already known (https://github.com/rajatomar788/pywebcopy/issues/46). David W Grossman has found a workaround, he removed all multithreading and committed this version here https://github.com/davidwgrossman/pywebcopy. 
+For save all resource (html, css, js, image, etc.) of a web page I used pywebcopy (https://pypi.org/project/pywebcopy/), but I don't know why, the "original" version hangs the console and does not exit. 
+If I have correctly understood, this issue is already known (https://github.com/rajatomar788/pywebcopy/issues/46). 
+David W Grossman has found a workaround, he removed all multithreading and committed this version here https://github.com/davidwgrossman/pywebcopy. 
 For this reason, I used this "unofficial" version in the local lib path (thanks to David W Grossman)
 For the web.py module I started from this project https://github.com/tech35/Python-Browser-Version-2 (thanks to Bilawal Asghar)
