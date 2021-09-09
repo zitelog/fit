@@ -8,3 +8,4 @@ test
 .vscode
 .gitignore
 package.json
+fit.db
