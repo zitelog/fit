@@ -6,7 +6,7 @@
 # Created Date: Saturday, June 19th 2021, 8:27:36 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Thu Sep 09 2021
+# Last Modified: Fri Sep 10 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -102,15 +102,16 @@ class WebView(QtWidgets.QMainWindow):
 
     stop_signal = QtCore.pyqtSignal()  # make a stop signal to communicate with the workers in another threads
 
-    def __init__(self, case_id, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         super(WebView, self).__init__(*args, **kwargs)
         self.error_msg = ErrorMessage()
         self.acquisition_directory = None
         self.acquisition_is_started = False
-        self.threads = []
         self.acquisition_status =  AcquisitionStatusView()
         self.acquisition_status.setupUi()
         self.log_confing = LogConfig()
+    
+    def init(self, case_id):
 
         #To start the acquisition it is necessary the case information are present on the DB
         try:
@@ -280,7 +281,6 @@ class WebView(QtWidgets.QMainWindow):
             action.setEnabled(False)
         
         
-        self.threads.clear() #TODO find another elegant solution
         self.acquisition_status.clear()
         self.acquisition_status.set_title('Acquisition is started!')
        
@@ -431,21 +431,21 @@ class WebView(QtWidgets.QMainWindow):
         self.acquisition_status.show()
 
     def start_packet_capture(self, options):
-        thread = QtCore.QThread()
-        self.threads.append(thread)
+        
+        self.th_packetcapture = QtCore.QThread()
 
         self.packetcapture = PacketCaptureView()
         self.packetcapture.set_options(options)
 
-        self.packetcapture.moveToThread(thread)
+        self.packetcapture.moveToThread(self.th_packetcapture)
 
-        thread.started.connect(self.packetcapture.start)
-        self.packetcapture.finished.connect(thread.quit)
+        self.th_packetcapture.started.connect(self.packetcapture.start)
+        self.packetcapture.finished.connect(self.th_packetcapture.quit)
         self.packetcapture.finished.connect(self.packetcapture.deleteLater)
-        thread.finished.connect(thread.deleteLater)
-        thread.finished.connect(self._thread_packetcapture_is_finished)
+        self.th_packetcapture.finished.connect(self.th_packetcapture.deleteLater)
+        self.th_packetcapture.finished.connect(self._thread_packetcapture_is_finished)
 
-        thread.start()
+        self.th_packetcapture.start()
 
     def _thread_packetcapture_is_finished(self):
         self.status.showMessage('Loop has been stopped and .pcap file has been saved in the case folder')
@@ -454,27 +454,26 @@ class WebView(QtWidgets.QMainWindow):
         logger_acquisition.info('Network Packet Capture stopped')
         self.acquisition_status.add_task('Network Packet Capture')
         self.acquisition_status.set_status('Network Packet Capture', 'Loop has been stopped and .pcap file has been saved in the case folder', 'done')
-        self.threads[0].quit()
-        self.threads[0].wait()
+        self.th_packetcapture.quit()
+        self.th_packetcapture.wait()
     
        
 
     def start_screen_recoder(self, options):
-        thread = QtCore.QThread()
-        self.threads.append(thread)
+        self.th_screenrecorder = QtCore.QThread()
 
         self.screenrecorder = ScreenRecorderView()
         self.screenrecorder.set_options(options)
 
-        self.screenrecorder.moveToThread(thread)
+        self.screenrecorder.moveToThread(self.th_screenrecorder)
  
-        thread.started.connect(self.screenrecorder.start)
-        self.screenrecorder.finished.connect(thread.quit)
-        self.screenrecorder.finished.connect(self.packetcapture.deleteLater)
-        thread.finished.connect(thread.deleteLater)
-        thread.finished.connect(self._thread_screenrecorder_is_finished)
+        self.th_screenrecorder.started.connect(self.screenrecorder.start)
+        self.screenrecorder.finished.connect(self.th_screenrecorder.quit)
+        self.screenrecorder.finished.connect(self.screenrecorder.deleteLater)
+        self.th_screenrecorder.finished.connect(self.th_screenrecorder.deleteLater)
+        self.th_screenrecorder.finished.connect(self._thread_screenrecorder_is_finished)
   
-        thread.start()
+        self.th_screenrecorder.start()
     
     def _thread_screenrecorder_is_finished(self):
         self.status.showMessage('Loop has been stopped and .avi file has been saved in the case folder')
@@ -483,8 +482,8 @@ class WebView(QtWidgets.QMainWindow):
         logger_acquisition.info('Screen recoder stopped')
         self.acquisition_status.add_task('Screen Recoder')
         self.acquisition_status.set_status('Screen Recoder', 'Loop has been stopped and .avi file has been saved in the case folder', 'done')
-        self.threads[1].quit()
-        self.threads[1].wait()
+        self.th_screenrecorder.quit()
+        self.th_screenrecorder.wait()
 
 
     def save_page(self):

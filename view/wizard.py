@@ -6,7 +6,7 @@
 # Created Date: Wednesday, June 23rd 2021, 12:51:13 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Tue Sep 07 2021
+# Last Modified: Fri Sep 10 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -47,7 +47,6 @@ from view.case_form import CaseFormView
 from view.error import ErrorView
 
 from controller.case import CaseController
-from view.web import WebView
 
 from common.error import ErrorMessage
 
@@ -103,7 +102,7 @@ class CaseInfoPage(QtWidgets.QWizardPage):
         self.form.lawyer_name.setText(self.case_info['lawyer_name'])
         self.form.proceedings_type.setCurrentIndex(self.form.proceedings_type.findText(self.case_info['proceedings_type']))
         self.form.courthouse.setText(self.case_info['courthouse'])
-        self.form.proceedings_number.setText(self.case_info['proceedings_number'])
+        self.form.proceedings_number.setText(str(self.case_info['proceedings_number']))
     
     def clear_case_information(self):
         self.form.lawyer_name.setText(None)
@@ -180,6 +179,8 @@ class SelectAcquisitionTypePage(QtWidgets.QWizardPage):
 
 
 class WizardView(QtWidgets.QWizard):
+    finished = QtCore.pyqtSignal(str, int)
+
     def __init__(self, parent=None):
         super(WizardView, self).__init__(parent)
 
@@ -213,7 +214,6 @@ class WizardView(QtWidgets.QWizard):
         self.retranslateUi()
 
     def _create_new_case(self):
-        acquisition_module = None
         
         buttons = self.select_acquisition_type_page.choise_acquisition_button_group.buttons()
         selected_buttons_index = [buttons[x].isChecked() for x in range(len(buttons))].index(True)
@@ -233,13 +233,8 @@ class WizardView(QtWidgets.QWizard):
             error_dlg.buttonClicked.connect(self.close)
             error_dlg.exec_()
 
-        if (acquisition_type == 'web'):
-            acquisition_module = WebView(case_id)
-        elif (acquisition_type == 'mail'):
-            pass
-        elif (acquisition_type == 'facebook'):
-            pass
-        
+        #Send signal to main loop to start the acquisition window
+        self.finished.emit(acquisition_type, case_id)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate

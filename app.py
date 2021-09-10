@@ -6,7 +6,7 @@
 # Created Date: Saturday, June 19th 2021, 8:25:20 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Thu Sep 09 2021
+# Last Modified: Fri Sep 10 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -48,5 +48,33 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     wizard = WizardView()
     wizard.init_wizard()
+    web = WebView()
+    web.hide()
+    
+    def start_acquisition(acquisition_type, case_id):
+        if (acquisition_type == 'web'):
+            acquisition_window = web
+        elif (acquisition_type == 'mail'):
+            pass
+        elif (acquisition_type == 'facebook'):
+            pass
+
+        acquisition_window.init(case_id)
+        acquisition_window.show()
+
+    #Wizard sends a signal when finish button is clicked and case is stored on the DB
+    wizard.finished.connect(lambda acquisition_type, case_id: start_acquisition(acquisition_type, case_id))
+
     wizard.show()
+
     sys.exit(app.exec_())
+
+    # app = QApplication(sys.argv)
+    # app.setApplicationName("Tech35's Web Browser")
+    # app.setOrganizationName("Tech35")
+    # app.setOrganizationDomain("Google.com")
+    
+
+    # window = WebView(8)
+
+    # sys.exit(app.exec_())

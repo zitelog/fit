@@ -6,7 +6,7 @@
 # Created Date: Saturday, July 31st 2021, 5:45:25 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Mon Aug 30 2021
+# Last Modified: Thu Sep 09 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -73,7 +73,7 @@ class CaseView(QtWidgets.QDialog):
         self.form.lawyer_name.setText(case_info['lawyer_name'])
         self.form.proceedings_type.setCurrentIndex(self.form.proceedings_type.findText(case_info['proceedings_type']))
         self.form.courthouse.setText(case_info['courthouse'])
-        self.form.proceedings_number.setText(case_info['proceedings_number'])
+        self.form.proceedings_number.setText(str(case_info['proceedings_number']))
 
 
         self.button_box.accepted.connect(lambda: self.accept(case_info))
