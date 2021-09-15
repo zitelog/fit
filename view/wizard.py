@@ -238,11 +238,11 @@ class WizardView(QtWidgets.QWizard):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("FIATWizard", "FIAT 1.0"))
-        self.select_acquisition_type_page.acquisition_group_box.setTitle(_translate("FIATWizard", "Tipo Acquizione"))
-        self.select_acquisition_type_page.web.setText(_translate("FIATWizard", "Web"))
-        self.select_acquisition_type_page.mail.setText(_translate("FIATWizard", "Mail"))
-        self.select_acquisition_type_page.facebook.setText(_translate("FIATWizard", "Facebook"))
+        self.setWindowTitle(_translate("FITWizard", "FIT 1.0"))
+        self.select_acquisition_type_page.acquisition_group_box.setTitle(_translate("FITWizard", "Tipo Acquizione"))
+        self.select_acquisition_type_page.web.setText(_translate("FITWizard", "Web"))
+        self.select_acquisition_type_page.mail.setText(_translate("FITWizard", "Mail"))
+        self.select_acquisition_type_page.facebook.setText(_translate("FITWizard", "Facebook"))
 
 
     def _get_recap_case_info_HTML(self):
@@ -272,7 +272,7 @@ class WizardView(QtWidgets.QWizard):
                 #get info to store on the DB    
                 self.case_info_page.case_info[next_item.objectName()] = value
                 html += "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:19px;\">\n"
-                html += "<span style=\" font-family:\'Consolas\',\'Courier New\',\'monospace\'; font-size:14px; font-weight:600; color:#ff0000;\">" + label  + ": </span>\n"
+                html += "<span style=\" font-family:\'Arial\',\'Courier New\',\'monospace\'; font-size:14px; font-weight:600; color:#ff0000;\">" + label  + ": </span>\n"
                 html += "<span style=\" font-size:14px; font-weight:600;  color:#000000;\">" + value  + "</span>\n"
                 html += "</p>\n"
         html += "</body>\n"

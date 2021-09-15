@@ -12,3 +12,4 @@ numpy==1.20.1
 pyquery==1.4.3
 beautifulsoup4==4.10.0
 PyQt5==5.15.4
+PyQtWebEngine==5.15.4

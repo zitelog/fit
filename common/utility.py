@@ -39,7 +39,6 @@
 
 
 import sys
-import winreg
 import hashlib
 
 def get_platform():
@@ -56,53 +55,57 @@ def get_platform():
 
     return platforms[sys.platform]
 
-def get_list_of_programs_installed_on_windows(hive, flag):
-    aReg = winreg.ConnectRegistry(None, hive)
-    aKey = winreg.OpenKey(aReg, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
-                          0, winreg.KEY_READ | flag)
+if get_platform() == 'win':
 
-    count_subkey = winreg.QueryInfoKey(aKey)[0]
+    import winreg
 
-    software_list = []
+    def get_list_of_programs_installed_on_windows(hive, flag):
+        aReg = winreg.ConnectRegistry(None, hive)
+        aKey = winreg.OpenKey(aReg, r"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall",
+                            0, winreg.KEY_READ | flag)
 
-    for i in range(count_subkey):
-        software = {}
-        try:
-            asubkey_name = winreg.EnumKey(aKey, i)
-            asubkey = winreg.OpenKey(aKey, asubkey_name)
-            software['name'] = winreg.QueryValueEx(asubkey, "DisplayName")[0]
+        count_subkey = winreg.QueryInfoKey(aKey)[0]
 
+        software_list = []
+
+        for i in range(count_subkey):
+            software = {}
             try:
-                software['version'] = winreg.QueryValueEx(asubkey, "DisplayVersion")[0]
+                asubkey_name = winreg.EnumKey(aKey, i)
+                asubkey = winreg.OpenKey(aKey, asubkey_name)
+                software['name'] = winreg.QueryValueEx(asubkey, "DisplayName")[0]
+
+                try:
+                    software['version'] = winreg.QueryValueEx(asubkey, "DisplayVersion")[0]
+                except EnvironmentError:
+                    software['version'] = 'undefined'
+                try:
+                    software['publisher'] = winreg.QueryValueEx(asubkey, "Publisher")[0]
+                except EnvironmentError:
+                    software['publisher'] = 'undefined'
+                software_list.append(software)
             except EnvironmentError:
-                software['version'] = 'undefined'
-            try:
-                software['publisher'] = winreg.QueryValueEx(asubkey, "Publisher")[0]
-            except EnvironmentError:
-                software['publisher'] = 'undefined'
-            software_list.append(software)
-        except EnvironmentError:
-            continue
+                continue
 
-    return software_list
+        return software_list
 
-def program_is_installed(name):
-    program = None
-    is_istalled = False
-    software_list = None
-    if get_platform() == 'win':
-        software_list = get_list_of_programs_installed_on_windows(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_32KEY) + \
-                        get_list_of_programs_installed_on_windows(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_64KEY) + \
-                        get_list_of_programs_installed_on_windows(winreg.HKEY_CURRENT_USER, 0)
-    
-    if software_list is not None:
-        for software in software_list:
-            if name in software['name']:
-                program = {'name':software['name'], 'version':software['version'], 'publisher':software['publisher']}
-                is_istalled = True
-                break
+    def program_is_installed(name):
+        program = None
+        is_istalled = False
+        software_list = None
+        if get_platform() == 'win':
+            software_list = get_list_of_programs_installed_on_windows(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_32KEY) + \
+                            get_list_of_programs_installed_on_windows(winreg.HKEY_LOCAL_MACHINE, winreg.KEY_WOW64_64KEY) + \
+                            get_list_of_programs_installed_on_windows(winreg.HKEY_CURRENT_USER, 0)
+        
+        if software_list is not None:
+            for software in software_list:
+                if name in software['name']:
+                    program = {'name':software['name'], 'version':software['version'], 'publisher':software['publisher']}
+                    is_istalled = True
+                    break
 
-    return is_istalled
+        return is_istalled
 
 def calculate_hash(filename, algorithm):
     with open(filename, "rb") as f:
