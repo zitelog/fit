@@ -17,7 +17,7 @@ Make sure you have installed all of the following prerequisites on your developm
 ## Downloading FIT
 There are two ways you can get the FIT:
 
-### Cloning The GitHub Repository
+### Cloning the github repository
 The recommended way to get FIT is to use git to directly clone the FIT repository:
 
 ```
@@ -26,7 +26,7 @@ git clone git@github.com:zitelog/fit.git fit
 
 This will clone the latest version of the FIT repository to a **fit** folder.
 
-### Downloading The Repository Zip File
+### Downloading the repository zip file
 Another way to use the FIT is to download a zip copy from the [master branch on GitHub](https://github.com/zitelog/fit/archive/refs/heads/main.zip).
 
 ## Install
