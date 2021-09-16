@@ -42,7 +42,7 @@ python -m venv env
 ```
 * activate the virtual environment (below its showed for windows OS):
 ```
-.\env\bin\activate.bat
+./env/Scripts/activate.bat
 ```
 * update pip in the virtual environment by running the following command:
 ```
