@@ -21,7 +21,7 @@ There are two ways you can get the FIT:
 The recommended way to get FIT is to use git to directly clone the FIT repository:
 
 ```
-$ git clone git@github.com:zitelog/fit.git fit
+git clone git@github.com:zitelog/fit.git fit
 ```
 
 This will clone the latest version of the FIT repository to a **fit** folder.
@@ -34,7 +34,7 @@ Once you've downloaded FIT and installed all the prerequisites:
 
 * go in fit folder:
 ```
-$ cd fit
+cd fit
 ```
 * create a virtual environment with following command (below its showed for windows OS):
 ```
@@ -49,7 +49,7 @@ python -m venv env
 python -m pip install --upgrade pip
 ```
 * install the dependencies:
-```bash
+```
 pip install -r requirements.txt
 ```
 
