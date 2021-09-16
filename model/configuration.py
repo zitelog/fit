@@ -53,7 +53,7 @@ class ConfigurationModel:
     def _load_configuration_from_db(self):
         rows = {}
         try:
-            db_file = os.path.dirname(sys.modules['__main__'].__file__) + '/fit.db'
+            db_file = './fit.db'
             conn = sqlite3.connect(db_file) 
             cursor = conn.cursor()
 

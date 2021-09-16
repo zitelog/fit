@@ -58,7 +58,7 @@ class CaseModel:
         """
 
         if db_file == None:
-            db_file = os.path.dirname(sys.modules['__main__'].__file__) + '/fit.db'
+            db_file = './fit.db'
 
         return sqlite3.connect(db_file)
 
