@@ -140,7 +140,7 @@ class WebView(QtWidgets.QMainWindow):
 
         #To start the acquisition it is also necessary load the configuration information from the DB
         try:
-            config_controller = ConfigurationController()
+            self.config_controller = ConfigurationController()
         except Exception as error:
             error_dlg = ErrorView(QtWidgets.QMessageBox.Critical,
                                 self.error_msg.TITLES['acquisition'],
@@ -151,7 +151,7 @@ class WebView(QtWidgets.QMainWindow):
             error_dlg.buttonClicked.connect(quit)
             error_dlg.exec_()
 
-        self.config = config_controller.get_configuration()
+        self.config = self.config_controller.get_configuration()
        
 
         
@@ -272,6 +272,7 @@ class WebView(QtWidgets.QMainWindow):
             loggers = loggers + [logging.getLogger(name) for name in  logging.root.manager.loggerDict if name not in [__name__ , 'hashreport'] ]
 
             self.log_confing.disable_loggers(loggers)
+
 
     def start_acquisition(self):
         
@@ -519,8 +520,11 @@ class WebView(QtWidgets.QMainWindow):
         form.exec_()
     
     def configuration(self):
-        config = ConfigurationView()
+        config = ConfigurationView(self)
         config.exec_()
+    
+    def reload_configuration(self):
+        self.config = self.config_controller.get_configuration()
 
 
     def back(self):

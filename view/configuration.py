@@ -6,7 +6,7 @@
 # Created Date: Friday, August 20th 2021, 12:45:26 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Mon Aug 30 2021
+# Last Modified: Thu Sep 16 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -309,6 +309,7 @@ class ConfigurationView(QtWidgets.QDialog):
             error_dlg.buttonClicked.connect(self.close)
             error_dlg.exec_()
         
+        self.parent().reload_configuration()
         return super().accept()
 
     
