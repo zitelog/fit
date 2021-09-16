@@ -36,11 +36,11 @@ Once you've downloaded FIT and installed all the prerequisites:
 ```
 cd fit
 ```
-* create a virtual environment with following command (below its showed for windows OS):
+* create a virtual environment with following command (below its showed windows OS and git-bash):
 ```
 python -m venv env
 ```
-* activate the virtual environment (below its showed for windows OS):
+* activate the virtual environment (below its showed windows OS and git-bash):
 ```
 source ./env/Scripts/activate
 ```
