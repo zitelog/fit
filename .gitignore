@@ -8,5 +8,8 @@ test
 .vscode
 venv
 env
+build
+dist
 package.json
 fit.db
+app.spec

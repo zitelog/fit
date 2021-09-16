@@ -6,7 +6,7 @@
 # Created Date: Thursday, July 22nd 2021, 6:44:49 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Mon Aug 30 2021
+# Last Modified: Thu Sep 16 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -53,7 +53,7 @@ class ConfigurationModel:
     def _load_configuration_from_db(self):
         rows = {}
         try:
-            conn = sqlite3.connect(os.path.dirname(sys.modules['__main__'].__file__) + '/fit.db') 
+            conn = sqlite3.connect('fit.db') 
             cursor = conn.cursor()
 
             cursor.execute("SELECT * FROM configuration;")

@@ -6,7 +6,7 @@
 # Created Date: Saturday, July 31st 2021, 5:34:42 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Thu Sep 09 2021
+# Last Modified: Thu Sep 16 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -58,7 +58,7 @@ class CaseModel:
         """
 
         if db_file == None:
-            db_file = os.path.dirname(sys.modules['__main__'].__file__) + '/fit.db'
+            db_file = 'fit.db'
 
         return sqlite3.connect(db_file)
 

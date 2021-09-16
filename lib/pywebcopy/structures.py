@@ -7,12 +7,13 @@ pywebcopy.structures
 Structures powering pywebcopy.
 
 """
-
+import sys
+from urllib.robotparser import RobotFileParser
 from collections import MutableMapping
 
 import requests
 from requests.structures import OrderedDict
-from six.moves.urllib.robotparser import RobotFileParser
+
 
 
 __all__ = ['CaseInsensitiveDict', 'RobotsTxtParser']
