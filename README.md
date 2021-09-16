@@ -14,6 +14,52 @@ For the implementation, I used:
 Make sure you have installed all of the following prerequisites on your development machine:
 * Wireshark - [Download & Install Wireshark](https://www.wireshark.org/download/). Network traffic analyzer, or "sniffer", for Linux, macOS, *BSD and other Unix and Unix-like operating systems and for Windows.
 
+## Downloading FIT
+There are two ways you can get the FIT:
+
+### Cloning The GitHub Repository
+The recommended way to get FIT is to use git to directly clone the FIT repository:
+
+```
+$ git clone git@github.com:zitelog/fit.git fit
+```
+
+This will clone the latest version of the FIT repository to a **fit** folder.
+
+### Downloading The Repository Zip File
+Another way to use the FIT is to download a zip copy from the [master branch on GitHub](https://github.com/zitelog/fit/archive/refs/heads/main.zip).
+
+## Install
+Once you've downloaded FIT and installed all the prerequisites:
+
+* go in fit folder:
+```
+$ cd fit
+```
+* create a virtual environment with following command (below its showed for windows OS):
+```
+python -m venv env
+```
+* activate the virtual environment (below its showed for windows OS):
+```
+.\env\bin\activate.bat
+```
+* update pip in the virtual environment by running the following command:
+```
+python -m pip install --upgrade pip
+```
+* install the dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+## Running FIT
+
+Run your application:
+
+```
+python app.py
+```
 
 ## Please note
 For save all resource (html, css, js, image, etc.) of a web page I used [pywebcopy](https://pypi.org/project/pywebcopy/), but I don't know why, the "original" version hangs the console and does not exit. 
