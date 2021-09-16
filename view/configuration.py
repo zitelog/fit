@@ -127,9 +127,14 @@ class ConfigurationView(QtWidgets.QDialog):
         self.screen_recorder_options = QtWidgets.QWidget()
         self.screen_recorder_options.setObjectName("Screen Recorder Options")
 
+        self.enabled_checkbox = QtWidgets.QCheckBox("Enable Screen Recorder", self.screen_recorder_options)
+        self.enabled_checkbox.setGeometry(QtCore.QRect(10, 30, 270, 70))
+        self.enabled_checkbox.stateChanged.connect(self._is_enabled_screen_recorder)
+        self.enabled_checkbox.setObjectName("enabled")
+
         #RESOLUTION
         self.group_box_resolution = QtWidgets.QGroupBox(self.screen_recorder_options)
-        self.group_box_resolution.setGeometry(QtCore.QRect(10, 30, 270, 70))
+        self.group_box_resolution.setGeometry(QtCore.QRect(10, 90, 270, 70))
         self.group_box_resolution.setObjectName("group_box_resolution")
         self.form_layout_resolution = QtWidgets.QWidget(self.group_box_resolution)
         self.form_layout_resolution.setGeometry(QtCore.QRect(20, 30, 222, 24))
@@ -157,7 +162,7 @@ class ConfigurationView(QtWidgets.QDialog):
         
         #FPS
         self.group_box_fps = QtWidgets.QGroupBox(self.screen_recorder_options)
-        self.group_box_fps.setGeometry(QtCore.QRect(310, 30, 160, 70))
+        self.group_box_fps.setGeometry(QtCore.QRect(310, 90, 160, 70))
         self.group_box_fps.setObjectName("group_box_fps")
         self.fps = QtWidgets.QSpinBox(self.group_box_fps)
         self.fps.setGeometry(QtCore.QRect(20, 30, 80, 22))
@@ -166,7 +171,7 @@ class ConfigurationView(QtWidgets.QDialog):
         
         #CODEC
         self.group_box_codec = QtWidgets.QGroupBox(self.screen_recorder_options)
-        self.group_box_codec.setGeometry(QtCore.QRect(510, 30, 160, 70))
+        self.group_box_codec.setGeometry(QtCore.QRect(510, 90, 160, 70))
         self.group_box_codec.setObjectName("group_box_codec")
         self.codec = QtWidgets.QComboBox(self.group_box_codec)
         self.codec.setGeometry(QtCore.QRect(20, 30, 80, 22))
@@ -175,7 +180,7 @@ class ConfigurationView(QtWidgets.QDialog):
 
         #FILE NAME
         self.group_box_filename = QtWidgets.QGroupBox(self.screen_recorder_options)
-        self.group_box_filename.setGeometry(QtCore.QRect(10, 130, 661, 91))
+        self.group_box_filename.setGeometry(QtCore.QRect(10, 190, 661, 91))
         self.group_box_filename.setObjectName("group_box_filename")
         self.filename = QtWidgets.QLineEdit(self.group_box_filename)
         self.filename.setGeometry(QtCore.QRect(20, 40, 601, 22))
@@ -205,12 +210,21 @@ class ConfigurationView(QtWidgets.QDialog):
         self.cases_folder.setText(self.config['cases_folder_' + utility.get_platform()])
         self.home_page_url.setText(self.config['home_page_url'])
         self.proceedings_type_list.setPlainText(self.config['proceedings_type_list'])
+        self.enabled_checkbox.setChecked(bool(self.current_sro['enabled']))
         width, height = tuple(self.current_sro['resolution'])
         self.width_resolution.setText(str(width))
         self.height_resolution.setText(str(height))
         self.fps.setValue(self.current_sro['fps'])
         self.codec.addItem(self.current_sro['codec'])
         self.filename.setText(self.current_sro['filename'])
+
+        self._is_enabled_screen_recorder()
+
+    def _is_enabled_screen_recorder(self):
+        self.group_box_resolution.setEnabled(self.enabled_checkbox.isChecked())
+        self.group_box_fps.setEnabled(self.enabled_checkbox.isChecked())
+        self.group_box_codec.setEnabled(self.enabled_checkbox.isChecked())
+        self.group_box_filename.setEnabled(self.enabled_checkbox.isChecked())
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
@@ -270,6 +284,8 @@ class ConfigurationView(QtWidgets.QDialog):
                         self.current_sro[key] = item.currentText()
                     elif isinstance(item, QtWidgets.QLineEdit) is not False and item.text():
                         self.current_sro[key] = item.text()
+                    elif isinstance(item, QtWidgets.QCheckBox):
+                        self.current_sro[key] = item.isChecked()
         
         self.config['screen_recorder_options'] = json.dumps(self.current_sro)
 
@@ -279,7 +295,7 @@ class ConfigurationView(QtWidgets.QDialog):
     def accept(self) -> None:
         
         self._get_current_config_values()
-        
+
         #store config info on the local DB
         try:
             self.controller.save(self.config)
@@ -292,6 +308,8 @@ class ConfigurationView(QtWidgets.QDialog):
 
             error_dlg.buttonClicked.connect(self.close)
             error_dlg.exec_()
+        
+        return super().accept()
 
     
     def reject(self) -> None:

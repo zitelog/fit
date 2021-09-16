@@ -83,16 +83,12 @@ class ConfigurationModel:
         update configuration info
         :param config:
         """
-        cases_folder = 'cases_folder_' + utility.get_platform()
         try:
             conn = sqlite3.connect(os.path.dirname(sys.modules['__main__'].__file__) + '/fit.db') 
-            sql = ''' UPDATE configuration
-                        SET {cases_folder} = ? ,
-                        proceedings_type_list = ? ,
-                        home_page_url = ?,
-                        screen_recorder_options = ?'''.format(cases_folder = cases_folder)
+            sql = 'UPDATE configuration SET {}'.format(', '.join('{} = ?'.format(k) for k in config.keys()))
         
             cur = conn.cursor()
+
             cur.execute(sql, tuple(config.values()))
 
         except sqlite3.Error as error:

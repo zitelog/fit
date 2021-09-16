@@ -71,7 +71,7 @@ class LogConfig:
                 },
                 'facquisition': {
                     'class': 'logging.FileHandler',
-                    'filename': 'acuisition.log',
+                    'filename': 'acquisition.log',
                     'mode': 'w',
                     'formatter': 'acquisition',
                 },

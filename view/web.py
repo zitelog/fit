@@ -110,6 +110,7 @@ class WebView(QtWidgets.QMainWindow):
         self.acquisition_status =  AcquisitionStatusView()
         self.acquisition_status.setupUi()
         self.log_confing = LogConfig()
+        self.is_enabled_screen_recorder = False
     
     def init(self, case_id):
 
@@ -220,7 +221,7 @@ class WebView(QtWidgets.QMainWindow):
         navtb.addAction(stop_btn)
 
         # Uncomment to disable native menubar on Mac
-        # self.menuBar().setNativeMenuBar(False)
+        self.menuBar().setNativeMenuBar(False)
 
         tab_menu = self.menuBar().addMenu("&Tab")
         new_tab_action = QtWidgets.QAction(QtGui.QIcon(os.path.join('asset/images', 'ui-tab--plus.png')), "New Tab", self)
@@ -323,15 +324,18 @@ class WebView(QtWidgets.QMainWindow):
 
             #Step 5: Add new thread for screen video recoder and start it
             options = json.loads(self.config['screen_recorder_options'])
-            options['filename'] = os.path.join(self.acquisition_directory, options['filename'])
-            self.start_screen_recoder(options)
-            self.acquisition_status.add_task('Screen Recoder')
-            self.acquisition_status.set_status('Screen Recoder', 'Recoder loop has been starded in a new thread!', 'done')
-            self.status.showMessage('Recoder loop has been starded in a new thread!')
-            self.progress_bar.setValue(100)
-            logger_acquisition.info('Screen recoder started')
-            logger_acquisition.info('Initial URL: ' + self.tabs.currentWidget().url().toString())
-            self.acquisition_status.set_title('Acquisition started success:')
+            self.is_enabled_screen_recorder = bool(options['enabled'])
+
+            if self.is_enabled_screen_recorder:
+                options['filename'] = os.path.join(self.acquisition_directory, options['filename'])
+                self.start_screen_recoder(options)
+                self.acquisition_status.add_task('Screen Recoder')
+                self.acquisition_status.set_status('Screen Recoder', 'Recoder loop has been starded in a new thread!', 'done')
+                self.status.showMessage('Recoder loop has been starded in a new thread!')
+                self.progress_bar.setValue(100)
+                logger_acquisition.info('Screen recoder started')
+                logger_acquisition.info('Initial URL: ' + self.tabs.currentWidget().url().toString())
+                self.acquisition_status.set_title('Acquisition started success:')
 
             #hidden progress bar
             self.progress_bar.setHidden(True)
@@ -352,7 +356,9 @@ class WebView(QtWidgets.QMainWindow):
             self.statusBar().showMessage('Message in statusbar.')
             #Step 2: stop threads 
             self.packetcapture.stop()
-            self.screenrecorder.stop()
+
+            if self.is_enabled_screen_recorder:
+                self.screenrecorder.stop()
 
             #Step 3:  Save screenshot of current page
             self.status.showMessage('Save screenshot of current page')
