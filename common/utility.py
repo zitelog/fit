@@ -6,7 +6,7 @@
 # Created Date: Tuesday, July 27th 2021, 12:48:05 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Fri Sep 03 2021
+# Last Modified: Wed Oct 20 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -37,9 +37,11 @@
 ###### 
 
 
-
+import os
 import sys
 import hashlib
+import platform
+import subprocess
 
 def get_platform():
 
@@ -114,3 +116,21 @@ def calculate_hash(filename, algorithm):
             file_hash.update(chunk)
 
         return file_hash.hexdigest()
+
+def start_mrsign_sever(executable):
+    #START mrsign 
+    #TODO the mrsign server starts in the local environment just for the developing test. 
+    # In the production environment the server will be located in remote position and this part of code will be removed 
+    if get_platform() == 'win':
+        subprocess.run(r'start /MIN "mrsign server" "'+ executable +'" -s -c mrsign/config.json', shell=True, 
+                        stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
+def stop_mrsign_sever():
+    #STOP mrsign 
+    #TODO the mrsign server starts in the local environment just for the developing test. 
+    # In the production environment the server will be located in remote position and this part of code will be removed 
+    if get_platform() == 'win':
+        subprocess.run("taskkill /f /im mrsign.exe", stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+
+
+

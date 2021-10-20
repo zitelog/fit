@@ -6,7 +6,7 @@
 # Created Date: Saturday, June 19th 2021, 8:27:36 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Thu Sep 16 2021
+# Last Modified: Wed Oct 20 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -56,6 +56,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets, QtWebEngineWidgets
 from view.screenrecorder import ScreenRecorderView
 from view.packetcapture import PacketCaptureView
 from view.acquisitionstatus import AcquisitionStatusView
+from view.signature import SignatureView
 
 from view.case import CaseView
 from view.configuration import ConfigurationView
@@ -107,10 +108,12 @@ class WebView(QtWidgets.QMainWindow):
         self.error_msg = ErrorMessage()
         self.acquisition_directory = None
         self.acquisition_is_started = False
-        self.acquisition_status =  AcquisitionStatusView()
+        self.acquisition_status =  AcquisitionStatusView(self)
         self.acquisition_status.setupUi()
         self.log_confing = LogConfig()
         self.is_enabled_screen_recorder = False
+        self.is_enabled_packet_capture = False
+        
     
     def init(self, case_id):
 
@@ -229,6 +232,21 @@ class WebView(QtWidgets.QMainWindow):
         new_tab_action.triggered.connect(lambda _: self.add_new_tab())
         tab_menu.addAction(new_tab_action)
 
+        #CONFIGURATION ACTION
+        configuration_action = QtWidgets.QAction("Configuration", self)
+        configuration_action.setStatusTip("Show configuration info")
+        configuration_action.triggered.connect(self.configuration)
+        self.menuBar().addAction(configuration_action)
+
+     
+        #CASE ACTION
+        case_action = QtWidgets.QAction("Case", self)
+        case_action.setStatusTip("Show case info")
+        case_action.triggered.connect(self.case)
+        self.menuBar().addAction(case_action)
+
+        
+
         #ACQUISITION MENU
         acquisition_menu = self.menuBar().addMenu("&Acquisition")
 
@@ -240,22 +258,18 @@ class WebView(QtWidgets.QMainWindow):
         stop_acquisition_action.setObjectName('StopAcquisitionAction')
         stop_acquisition_action.triggered.connect(self.stop_acquisition)
         acquisition_menu.addAction(stop_acquisition_action)
-        acquisition_status_action = QtWidgets.QAction(QtGui.QIcon(os.path.join('asset/images', 'stop.png')), "Status", self)
+        acquisition_status_action = QtWidgets.QAction(QtGui.QIcon(os.path.join('asset/images', 'info.png')), "Status", self)
         acquisition_status_action.setObjectName('StatusAcquisitionAction')
         acquisition_status_action.triggered.connect(self._acquisition_status)
         acquisition_menu.addAction(acquisition_status_action)
 
-        #CASE ACTION
-        case_action = QtWidgets.QAction("Case", self)
-        case_action.setStatusTip("Show case info")
-        case_action.triggered.connect(self.case)
-        self.menuBar().addAction(case_action)
 
-        #CONFIGURATION ACTION
-        configuration_action = QtWidgets.QAction("Configuration", self)
-        configuration_action.setStatusTip("Show configuration info")
-        configuration_action.triggered.connect(self.configuration)
-        self.menuBar().addAction(configuration_action)
+
+        #SIGN
+        sign = QtWidgets.QAction("Sign", self)
+        sign.setStatusTip("put a signature on the acquisition directory")
+        sign.triggered.connect(self.__sign)
+        self.menuBar().addAction(sign)
 
 
 
@@ -315,13 +329,16 @@ class WebView(QtWidgets.QMainWindow):
             self.progress_bar.setValue(50)
 
             #Step 4: Add new thread for network packet capture and start it
-            options = {'acquisition_directory': self.acquisition_directory, 'filename' : 'acquisition.pcap'}
-            self.start_packet_capture(options)
-            self.acquisition_status.add_task('Network Packet Capture')
-            self.acquisition_status.set_status('Network Packet Capture', 'Capture loop has been starded in a new thread!', 'done')
-            logger_acquisition.info('Network Packet Capture started')
-            self.status.showMessage('Capture loop has been starded in a new thread!')
-            self.progress_bar.setValue(75)
+            options = json.loads(self.config['packet_capture_options'])
+            self.is_enabled_packet_capture = bool(options['enabled'])
+            if self.is_enabled_packet_capture:
+                options['acquisition_directory'] = self.acquisition_directory
+                self.start_packet_capture(options)
+                self.acquisition_status.add_task('Network Packet Capture')
+                self.acquisition_status.set_status('Network Packet Capture', 'Capture loop has been starded in a new thread!', 'done')
+                logger_acquisition.info('Network Packet Capture started')
+                self.status.showMessage('Capture loop has been starded in a new thread!')
+                self.progress_bar.setValue(75)
 
             #Step 5: Add new thread for screen video recoder and start it
             options = json.loads(self.config['screen_recorder_options'])
@@ -355,8 +372,9 @@ class WebView(QtWidgets.QMainWindow):
             logger_acquisition.info('Acquisition stopped')
             logger_acquisition.info('End URL: ' + self.tabs.currentWidget().url().toString())
             self.statusBar().showMessage('Message in statusbar.')
-            #Step 2: stop threads 
-            self.packetcapture.stop()
+            #Step 2: stop threads
+            if self.is_enabled_packet_capture:
+                self.packetcapture.stop()
 
             if self.is_enabled_screen_recorder:
                 self.screenrecorder.stop()
@@ -385,12 +403,13 @@ class WebView(QtWidgets.QMainWindow):
             logger_acquisition.info('Save all resource of current page')
             self.acquisition_status.add_task('Save Page')
             self.acquisition_status.set_status('Save Page',zip_folder, 'done')
-           
 
             ### Waiting everything is synchronized  
             loop = QtCore.QEventLoop()
             QtCore.QTimer.singleShot(2000, loop.quit)
             loop.exec_()
+
+            
    
             self.status.showMessage('Calculate acquisition file hash')
             self.progress_bar.setValue(100)
@@ -418,7 +437,7 @@ class WebView(QtWidgets.QMainWindow):
             logger_acquisition.info('Acquisition end')
 
             #### open the acquisition folder ####
-            QtWidgets.QFileDialog.getOpenFileName(None, 'Acquisition Case Folder', self.acquisition_directory, 'All Files(*.*)')
+            os.startfile(self.acquisition_directory)
 
             #### Enable all action ####
             self.setEnabled(True)
@@ -516,12 +535,21 @@ class WebView(QtWidgets.QMainWindow):
         return wp.file_path
 
     def case(self):
-        form = CaseView(self.case_info)
+        form = CaseView(self.case_info, parent=self)
         form.exec_()
-    
+
     def configuration(self):
         config = ConfigurationView(self)
         config.exec_()
+    
+    def __sign(self):
+        self.signature = SignatureView(self)
+        self.signature.finished.connect(self.__signature_process_is_finished)
+
+        self.signature.generate()
+
+    def __signature_process_is_finished(self):
+        pass
     
     def reload_configuration(self):
         self.config = self.config_controller.get_configuration()

@@ -6,7 +6,7 @@
 # Created Date: Thursday, July 22nd 2021, 6:44:49 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Thu Sep 16 2021
+# Last Modified: Wed Oct 20 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -89,7 +89,6 @@ class ConfigurationModel:
             sql = 'UPDATE configuration SET {}'.format(', '.join('{} = ?'.format(k) for k in config.keys()))
         
             cur = conn.cursor()
-
             cur.execute(sql, tuple(config.values()))
 
         except sqlite3.Error as error:

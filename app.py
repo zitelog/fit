@@ -6,7 +6,7 @@
 # Created Date: Saturday, June 19th 2021, 8:25:20 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Fri Sep 10 2021
+# Last Modified: Tue Oct 19 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -42,6 +42,7 @@ from PyQt5.QtGui import *
 import sys
 from view.wizard import WizardView
 from view.web import WebView
+from view.verifysignature import VerifySignatureView
 
 
 if __name__ == '__main__':
@@ -50,31 +51,25 @@ if __name__ == '__main__':
     wizard.init_wizard()
     web = WebView()
     web.hide()
+    verify_signature = VerifySignatureView()
+    verify_signature.hide()
     
-    def start_acquisition(acquisition_type, case_id):
-        if (acquisition_type == 'web'):
+    def start_task(task, case_id):
+        if (task == 'web'):
             acquisition_window = web
-        elif (acquisition_type == 'mail'):
+        elif (task == 'mail'):
             pass
-        elif (acquisition_type == 'facebook'):
+        elif (task == 'fb'):
             pass
+        elif (task == 'verify_signature'):
+            acquisition_window = verify_signature
 
         acquisition_window.init(case_id)
         acquisition_window.show()
 
     #Wizard sends a signal when finish button is clicked and case is stored on the DB
-    wizard.finished.connect(lambda acquisition_type, case_id: start_acquisition(acquisition_type, case_id))
+    wizard.finished.connect(lambda task, case_id: start_task(task, case_id))
 
     wizard.show()
 
     sys.exit(app.exec_())
-
-    # app = QApplication(sys.argv)
-    # app.setApplicationName("Tech35's Web Browser")
-    # app.setOrganizationName("Tech35")
-    # app.setOrganizationDomain("Google.com")
-    
-
-    # window = WebView(8)
-
-    # sys.exit(app.exec_())

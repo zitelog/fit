@@ -6,7 +6,7 @@
 # Created Date: Wednesday, September 1st 2021, 11:20:05 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Wed Sep 01 2021
+# Last Modified: Tue Oct 19 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -37,3 +37,5 @@
 ###### 
 
 DEBUG = False
+MAKE_REQUEST = 'make'
+CHECK_REQUEST = 'check'

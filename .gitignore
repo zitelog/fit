@@ -9,6 +9,7 @@ test
 venv
 env
 build
+mrsign
 dist
 package.json
 fit.db

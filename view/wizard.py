@@ -6,7 +6,7 @@
 # Created Date: Wednesday, June 23rd 2021, 12:51:13 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Fri Sep 10 2021
+# Last Modified: Tue Oct 19 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -112,70 +112,114 @@ class CaseInfoPage(QtWidgets.QWizardPage):
     
 
 
-class SelectAcquisitionTypePage(QtWidgets.QWizardPage):
+class SelectTaskPage(QtWidgets.QWizardPage):
     def __init__(self, parent=None):
-        super(SelectAcquisitionTypePage, self).__init__(parent)
+        super(SelectTaskPage, self).__init__(parent)
 
-        self.setObjectName("SelectAcquisitionType")
+        self.setObjectName("SelectTask")
 
+        # Create a button group for radio buttons
+        self.radio_button_group = QtWidgets.QButtonGroup()
+        self.radio_button_group.buttonToggled[QtWidgets.QAbstractButton, bool].connect(self.completeChanged)
+        self.radio_button_container = QtWidgets.QWidget(self)
+        self.radio_button_container.setGeometry(QtCore.QRect(130, 80, 501, 112))
+        self.radio_button_container.setObjectName("radio_button_container")
+        self.radio_buttons_hlayout = QtWidgets.QHBoxLayout(self.radio_button_container)
+        self.radio_buttons_hlayout.setContentsMargins(0, 0, 0, 0)
+        self.radio_buttons_hlayout.setObjectName("radio_buttons_hlayout")
+
+        
+        #RADIO BUTTON WEB
+        self.web_radio_button_wrapper = QtWidgets.QWidget(self.radio_button_container)
+        self.web_radio_button_wrapper.setStyleSheet("QWidget#web_radio_button_wrapper {\n""border: 1px solid black;\n""}")
+        self.web_radio_button_wrapper.setObjectName("web_radio_button_wrapper")
+        self.web_vlayout = QtWidgets.QVBoxLayout(self.web_radio_button_wrapper)
+        self.web_vlayout.setContentsMargins(5, 5, 5, 5)
+        self.web_vlayout.setObjectName("web_vlayout")
+        self.web_img = QtWidgets.QLabel(self.web_radio_button_wrapper)
+        self.web_img.setStyleSheet("image: url(asset/images/wizard/web.png);")
+        self.web_img.setText("")
+        self.web_img.setObjectName("web_img")
+        self.web_vlayout.addWidget(self.web_img)
+        self.web = QtWidgets.QRadioButton(self.web_radio_button_wrapper)
+        self.web.setObjectName("web")
+        self.web_vlayout.addWidget(self.web)
+        self.radio_buttons_hlayout.addWidget(self.web_radio_button_wrapper)
+        self.radio_button_group.addButton(self.web, 0)
+
+        #RADIO BUTTON MAIL
+        self.mail_radio_button_wrapper = QtWidgets.QWidget(self.radio_button_container)
+        self.mail_radio_button_wrapper.setStyleSheet("QWidget#mail_radio_button_wrapper {\n""border: 1px solid #c3c3c3;\n""}")
+        self.mail_radio_button_wrapper.setObjectName("mail_radio_button_wrapper")
+        self.mail_vlayout = QtWidgets.QVBoxLayout(self.mail_radio_button_wrapper)
+        self.mail_vlayout.setContentsMargins(5, 5, 5, 5)
+        self.mail_vlayout.setObjectName("mail_vlayout")
+        self.mail_img = QtWidgets.QLabel(self.mail_radio_button_wrapper)
+        self.mail_img.setEnabled(False)
+        self.mail_img.setStyleSheet("image: url(asset/images/wizard/mail-disabled.png);\n")
+        self.mail_img.setText("")
+        self.mail_img.setObjectName("mail_img")
+        self.mail_vlayout.addWidget(self.mail_img)
+        self.mail = QtWidgets.QRadioButton(self.mail_radio_button_wrapper)
+        self.mail.setEnabled(False)
+        self.mail.setObjectName("mail")
+        self.mail_vlayout.addWidget(self.mail)
+        self.radio_buttons_hlayout.addWidget(self.mail_radio_button_wrapper)
+        self.radio_button_group.addButton(self.mail, 1)
+        
+        #RADIO BUTTON FACEBOOK
+        self.fb_radio_button_wrapper = QtWidgets.QWidget(self.radio_button_container)
+        self.fb_radio_button_wrapper.setStyleSheet("QWidget#fb_radio_button_wrapper {\n""border: 1px solid #c3c3c3;\n""}")
+        self.fb_radio_button_wrapper.setObjectName("fb_radio_button_wrapper")
+        self.fb_vlayout = QtWidgets.QVBoxLayout(self.fb_radio_button_wrapper)
+        self.fb_vlayout.setContentsMargins(5, 5, 5, 5)
+        self.fb_vlayout.setObjectName("fb_vlayout")
+        self.fb_img = QtWidgets.QLabel(self.fb_radio_button_wrapper)
+        self.fb_img.setEnabled(False)
+        self.fb_img.setStyleSheet("image: url(asset/images/wizard/fb-disabled.png);")
+        self.fb_img.setText("")
+        self.fb_img.setObjectName("fb_img")
+        self.fb_vlayout.addWidget(self.fb_img)
+        self.fb = QtWidgets.QRadioButton(self.fb_radio_button_wrapper)
+        self.fb.setEnabled(False)
+        self.fb.setObjectName("fb")
+        self.fb_vlayout.addWidget(self.fb)
+        self.radio_buttons_hlayout.addWidget(self.fb_radio_button_wrapper)
+        self.radio_button_group.addButton(self.fb, 2)
+
+        #RADIO BUTTON CHECK SIGNATURE
+        self.verify_signature_radio_button_wrapper = QtWidgets.QWidget(self.radio_button_container)
+        self.verify_signature_radio_button_wrapper.setStyleSheet("QWidget#verify_signature_radio_button_wrapper {\n""border: 1px solid black;\n""}")
+        self.verify_signature_radio_button_wrapper.setObjectName("verify_signature_radio_button_wrapper")
+        self.verify_signature_vlayout = QtWidgets.QVBoxLayout(self.verify_signature_radio_button_wrapper)
+        self.verify_signature_vlayout.setContentsMargins(5, 5, 5, 5)
+        self.verify_signature_vlayout.setObjectName("verify_signature_vlayout")
+        self.verify_signature_img = QtWidgets.QLabel(self.verify_signature_radio_button_wrapper)
+        self.verify_signature_img.setStyleSheet("image: url(asset/images/wizard/signature.png);")
+        self.verify_signature_img.setText("")
+        self.verify_signature_img.setObjectName("verify_signature_img")
+        self.verify_signature_vlayout.addWidget(self.verify_signature_img)
+        self.verify_signature = QtWidgets.QRadioButton(self.verify_signature_radio_button_wrapper)
+        self.verify_signature.setObjectName("verify_signature")
+        self.verify_signature_vlayout.addWidget(self.verify_signature)
+        self.radio_buttons_hlayout.addWidget(self.verify_signature_radio_button_wrapper)
+        self.radio_button_group.addButton(self.verify_signature, 3)
+
+        #AREA RECAP INFO
         self.acquisition_group_box = QtWidgets.QGroupBox(self)
         self.acquisition_group_box.setEnabled(True)
-        self.acquisition_group_box.setGeometry(QtCore.QRect(60, 70, 671, 331))
+        self.acquisition_group_box.setGeometry(QtCore.QRect(130, 280, 501, 171))
         self.acquisition_group_box.setObjectName("acquisition_group_box")
-
-        #TEXT AREA RECAP INFO
         self.recap_case_info = QtWidgets.QTextBrowser(self.acquisition_group_box)
-        self.recap_case_info.setGeometry(QtCore.QRect(170, 60, 430, 200))
+        self.recap_case_info.setGeometry(QtCore.QRect(30, 30, 430, 121))
         font = QtGui.QFont()
         font.setPointSize(10)
         self.recap_case_info.setFont(font)
         self.recap_case_info.setReadOnly(True)
         self.recap_case_info.setObjectName("recap_case_info")
 
-        # Create a button group for radio buttons
-        self.choise_acquisition_button_group = QtWidgets.QButtonGroup()
-
-        self.choise_acquisition_vertical_widget = QtWidgets.QWidget(self.acquisition_group_box)
-        self.choise_acquisition_vertical_widget.setGeometry(QtCore.QRect(20, 60, 121, 161))
-        self.choise_acquisition_vertical_widget.setObjectName("choise_acquisition_vertical_widget")
-        self.choise_acquisition_vertical_layout = QtWidgets.QVBoxLayout(self.choise_acquisition_vertical_widget)
-        self.choise_acquisition_vertical_layout.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
-        self.choise_acquisition_vertical_layout.setContentsMargins(0, 0, 0, 0)
-        self.choise_acquisition_vertical_layout.setSpacing(0)
-        self.choise_acquisition_vertical_layout.setObjectName("choise_acquisition_vertical_layout")
-
-
-        self.web = QtWidgets.QRadioButton(self.choise_acquisition_vertical_widget)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.web.setFont(font)
-        self.web.setChecked(True)
-        self.web.setObjectName("web")
-        self.choise_acquisition_vertical_layout.addWidget(self.web)
-        self.choise_acquisition_button_group.addButton(self.web)
-
-
-
-
-        self.mail = QtWidgets.QRadioButton(self.choise_acquisition_vertical_widget)
-        self.mail.setEnabled(False)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.mail.setFont(font)
-        self.mail.setObjectName("mail")
-        self.choise_acquisition_vertical_layout.addWidget(self.mail)
-        self.choise_acquisition_button_group.addButton(self.mail)
-
-        self.facebook = QtWidgets.QRadioButton(self.choise_acquisition_vertical_widget)
-        self.facebook.setEnabled(False)
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.facebook.setFont(font)
-        self.facebook.setObjectName("facebook")
-        self.choise_acquisition_vertical_layout.addWidget(self.facebook)
-        self.choise_acquisition_button_group.addButton(self.facebook)
-        
-
+    def isComplete(self):
+        return self.radio_button_group.checkedId() >= 0
 
 
 class WizardView(QtWidgets.QWizard):
@@ -201,23 +245,25 @@ class WizardView(QtWidgets.QWizard):
 
 
         self.case_info_page = CaseInfoPage(self)
-        self.select_acquisition_type_page = SelectAcquisitionTypePage(self)
+        self.select_task_page = SelectTaskPage(self)
 
         self.addPage(self.case_info_page)
-        self.addPage(self.select_acquisition_type_page)
+        self.addPage(self.select_task_page)
 
-        self.button(QtWidgets.QWizard.NextButton).clicked.connect(lambda: self.select_acquisition_type_page.recap_case_info.setHtml(self._get_recap_case_info_HTML()))
+        self.button(QtWidgets.QWizard.NextButton).clicked.connect(lambda: self.select_task_page.recap_case_info.setHtml(self._get_recap_case_info_HTML()))
 
         self.button(QtWidgets.QWizard.FinishButton).clicked.connect(self._create_new_case)
+
+        self.button(QtWidgets.QWizard.FinishButton).setDisabled(True)
 
 
         self.retranslateUi()
 
     def _create_new_case(self):
         
-        buttons = self.select_acquisition_type_page.choise_acquisition_button_group.buttons()
+        buttons = self.select_task_page.radio_button_group.buttons()
         selected_buttons_index = [buttons[x].isChecked() for x in range(len(buttons))].index(True)
-        acquisition_type = buttons[selected_buttons_index].objectName()
+        task = buttons[selected_buttons_index].objectName()
 
         case_id = None
         #store information case on the local DB
@@ -234,15 +280,16 @@ class WizardView(QtWidgets.QWizard):
             error_dlg.exec_()
 
         #Send signal to main loop to start the acquisition window
-        self.finished.emit(acquisition_type, case_id)
+        self.finished.emit(task, case_id)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("FITWizard", "FIT 1.0"))
-        self.select_acquisition_type_page.acquisition_group_box.setTitle(_translate("FITWizard", "Tipo Acquizione"))
-        self.select_acquisition_type_page.web.setText(_translate("FITWizard", "Web"))
-        self.select_acquisition_type_page.mail.setText(_translate("FITWizard", "Mail"))
-        self.select_acquisition_type_page.facebook.setText(_translate("FITWizard", "Facebook"))
+        self.select_task_page.acquisition_group_box.setTitle(_translate("FITWizard", "Riepilogo anagrafica caso"))
+        self.select_task_page.web.setText(_translate("FITWizard", "WEB"))
+        self.select_task_page.mail.setText(_translate("FITWizard", "MAIL"))
+        self.select_task_page.fb.setText(_translate("FITWizard", "FACEBOOK"))
+        self.select_task_page.verify_signature.setText(_translate("FITWizard", "CHECK SIGNATURE"))
 
 
     def _get_recap_case_info_HTML(self):
@@ -272,7 +319,7 @@ class WizardView(QtWidgets.QWizard):
                 #get info to store on the DB    
                 self.case_info_page.case_info[next_item.objectName()] = value
                 html += "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; line-height:19px;\">\n"
-                html += "<span style=\" font-family:\'Arial\',\'Courier New\',\'monospace\'; font-size:14px; font-weight:600; color:#ff0000;\">" + label  + ": </span>\n"
+                html += "<span style=\" font-family:\'Arial\',\'Courier New\',\'monospace\'; font-size:14px; font-weight:300; color:#000000;\">" + label  + ": </span>\n"
                 html += "<span style=\" font-size:14px; font-weight:600;  color:#000000;\">" + value  + "</span>\n"
                 html += "</p>\n"
         html += "</body>\n"

@@ -6,7 +6,7 @@
 # Created Date: Tuesday, August 31st 2021, 10:22:49 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Fri Sep 03 2021
+# Last Modified: Sun Sep 26 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -77,7 +77,7 @@ class LogConfig:
                 },
                 'fhashreport': {
                     'class': 'logging.FileHandler',
-                    'filename': 'hashreport.log',
+                    'filename': 'acquisition.hash',
                     'mode': 'w',
                     'formatter': 'hashreport',
                 }

@@ -6,7 +6,7 @@
 # Created Date: Wednesday, August 18th 2021, 3:15:18 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Sat Aug 28 2021
+# Last Modified: Wed Oct 20 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -45,7 +45,8 @@ class ErrorMessage:
             'form' : 'Load data error',
             'software_installation' : 'Software is not installed',
             'capture_packet' : 'Capture error',
-            'screen_recoder' : 'Screen Recoder error'
+            'screen_recoder' : 'Screen Recoder error',
+            'mrsign_configuration_options' : 'MRSign configuration options error'
         }
 
         self.MESSAGES = {
@@ -56,6 +57,10 @@ class ErrorMessage:
             'update_config_info' : 'An error occurred during update config information on the DB! \nSee bellow for more detail.',
             'software_installation' : 'The required software would appear not to be installed on this PC! \nSee bellow for more detail.',
             'capture_packet' : 'An error occurred during network packets acquisition! \nSee bellow for more detail.',
-            'screen_recoder' : 'An error occurred during screen recoder acquisition! \nSee bellow for more detail.'
+            'screen_recoder' : 'An error occurred during screen recoder acquisition! \nSee bellow for more detail.',
+            'mrsign_path' : 'MRSign seem don\'t installed on this path "{}"\nPlease check the configuration.',
+            'mrsign_executable' : 'MRSign seem not be an executable file "{}"\nPlease check the installation.',
+            'mrsign_hostname_or_port' : 'Hostname or port appear not to be configured\nPlease check the configuration.',
+            'mrsign_username_or_password' : 'Username or password appear not to be configured\nPlease check the configuration.'
         }
     
