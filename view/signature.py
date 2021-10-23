@@ -6,7 +6,7 @@
 # Created Date: Wednesday, July 28th 2021, 10:05:40 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Wed Oct 20 2021
+# Last Modified: Sun Oct 24 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -162,23 +162,30 @@ class SignatureView(QObject):
 
         dlg.exec()
     
-    def generate(self):
+    def generate(self, acquisiton_directory):
         self.request = MAKE_REQUEST
-        if self.__waring_message() == QMessageBox.Yes:
-            if not 'acquisiton_directory' in self.options or not self.options['acquisiton_directory']:
-                self.options['acquisiton_directory'] = self.__select_acquisition_directory()
-            
-            fileinfo = QFileInfo(os.path.join(self.options['acquisiton_directory'], self.filename))
 
+        #Silent mode
+        if acquisiton_directory and os.path.exists(acquisiton_directory):
+             self.options['acquisiton_directory'] = acquisiton_directory
+        else: 
+            if self.__waring_message() == QMessageBox.Yes:
+                self.options['acquisiton_directory'] = self.__select_acquisition_directory()
+        
+        print(self.options['acquisiton_directory'])
+        
+        if 'acquisiton_directory' in self.options and self.options['acquisiton_directory']:    
+            fileinfo = QFileInfo(os.path.join(self.options['acquisiton_directory'], self.filename))
+            
             if fileinfo.exists():
                 self.__message_answer("signature-file-already-exist")
             else:
                 if self.__mrsign_configuration_options():
                     self.__start_process()
     
-    def verify(self, folderpath):
+    def verify(self, acquisiton_directory):
         self.request = CHECK_REQUEST
-        self.options['acquisiton_directory'] = folderpath
+        self.options['acquisiton_directory'] = acquisiton_directory
         fileinfo = QFileInfo(os.path.join(self.options['acquisiton_directory'], self.filename))
 
         if not fileinfo.exists():

@@ -6,7 +6,7 @@
 # Created Date: Saturday, June 19th 2021, 8:27:36 am
 # Author: Fabio Zito
 # -----
-# Last Modified: Wed Oct 20 2021
+# Last Modified: Sun Oct 24 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -270,6 +270,7 @@ class WebView(QtWidgets.QMainWindow):
         sign.setStatusTip("put a signature on the acquisition directory")
         sign.triggered.connect(self.__sign)
         self.menuBar().addAction(sign)
+        sign.setVisible(False)
 
 
 
@@ -430,9 +431,10 @@ class WebView(QtWidgets.QMainWindow):
                 algorithm = 'sha256'
                 logger_hashreport.info(f'SHA-256: {utility.calculate_hash(filename, algorithm)}')
 
-        #     #TODO Step 6: calulate FIT hash 
-        #     logger_acquisition.info('Calculate FIT hash')
-              
+            #TODO Step 6: calulate FIT hash 
+            logger_acquisition.info('Calculate FIT Signature')
+            self.__sign(self.acquisition_directory)
+            
 
             logger_acquisition.info('Acquisition end')
 
@@ -542,11 +544,11 @@ class WebView(QtWidgets.QMainWindow):
         config = ConfigurationView(self)
         config.exec_()
     
-    def __sign(self):
+    def __sign(self, acquisiton_directory = ''):
         self.signature = SignatureView(self)
         self.signature.finished.connect(self.__signature_process_is_finished)
 
-        self.signature.generate()
+        self.signature.generate(acquisiton_directory)
 
     def __signature_process_is_finished(self):
         pass
