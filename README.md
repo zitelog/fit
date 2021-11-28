@@ -8,7 +8,7 @@ For the implementation, I used:
 * Qt as graphical user interface
 * Pyshark (wrapper for Tshark) which a sniffer (similar to Sun's snoop or tcpdump)
 * OpenVC and Pyautogui for screen capture
-* MrSign to signature mechanism
+* MrSign for the signature
 
 
 ## Prerequisites
@@ -54,8 +54,10 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
-## Install MrSign
-After download and compile MrSign. 
+* after downloading and installing the MrSign, copy the binary in the mrsign directory:
+```
+cp /mrsing_path/mrsign.exe ./mrsign
+```
 
 ## Running FIT
 
