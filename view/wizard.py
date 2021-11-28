@@ -6,7 +6,7 @@
 # Created Date: Wednesday, June 23rd 2021, 12:51:13 pm
 # Author: Fabio Zito
 # -----
-# Last Modified: Tue Oct 19 2021
+# Last Modified: Mon Oct 25 2021
 # Modified By: Fabio Zito
 # -----
 # MIT License
@@ -289,7 +289,7 @@ class WizardView(QtWidgets.QWizard):
         self.select_task_page.web.setText(_translate("FITWizard", "WEB"))
         self.select_task_page.mail.setText(_translate("FITWizard", "MAIL"))
         self.select_task_page.fb.setText(_translate("FITWizard", "FACEBOOK"))
-        self.select_task_page.verify_signature.setText(_translate("FITWizard", "CHECK SIGNATURE"))
+        self.select_task_page.verify_signature.setText(_translate("FITWizard", "VERIFY SIGNATURE"))
 
 
     def _get_recap_case_info_HTML(self):
