@@ -8,11 +8,13 @@ For the implementation, I used:
 * Qt as graphical user interface
 * Pyshark (wrapper for Tshark) which a sniffer (similar to Sun's snoop or tcpdump)
 * OpenVC and Pyautogui for screen capture
+* MrSign to signature mechanism
 
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
 * Wireshark - [Download & Install Wireshark](https://www.wireshark.org/download/). Network traffic analyzer, or "sniffer", for Linux, macOS, *BSD and other Unix and Unix-like operating systems and for Windows.
+* MrSign - [Download & Compile MrSing](https://github.com/zitelog/mrsign). Generate and verify a signature by of the contents of a directory.
 
 ## Downloading FIT
 There are two ways you can get the FIT:
@@ -52,6 +54,8 @@ python -m pip install --upgrade pip
 ```
 pip install -r requirements.txt
 ```
+## Install MrSign
+After download and compile MrSign. 
 
 ## Running FIT
 
