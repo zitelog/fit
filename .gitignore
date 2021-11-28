@@ -9,7 +9,8 @@ test
 venv
 env
 build
-mrsign
+mrsign/server/zserver.store
+mrsign/mrsign.exe
 dist
 package.json
 fit.db
